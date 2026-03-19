@@ -353,8 +353,11 @@ CHART = dict(
     font          = dict(family="Arial, sans-serif", size=11, color="#5f6368"),
     hovermode     = "x unified",
     xaxis = dict(showgrid=True, gridcolor="#f1f3f4", zeroline=False),
-    yaxis = dict(showgrid=True, gridcolor="#f1f3f4", zeroline=False),
 )
+# CHART deliberately excludes yaxis so charts can set their own
+# without getting a duplicate-key TypeError from Plotly
+CHART_Y = dict(**CHART,
+    yaxis=dict(showgrid=True, gridcolor="#f1f3f4", zeroline=False))
 
 
 # ================================================================
@@ -728,7 +731,7 @@ with col_sig:
     fig_fc.add_hline(y=4.0, line_dash="dot",
                      line_color="#1e8e3e", line_width=1)
     fig_fc.update_layout(
-        **CHART, height=155, showlegend=False,
+        **CHART_Y, height=155, showlegend=False,
         title=dict(text="CPI 6-month forecast (ARIMA)",
                    font_size=10, font_color="#5f6368"),
         margin=dict(l=4, r=4, t=26, b=4),
@@ -780,7 +783,7 @@ with col_sec:
         hovertemplate="%{y}: %{x:+.2f}%<extra></extra>",
     ))
     fig_s.update_layout(
-        **CHART, height=280, showlegend=False,
+        **CHART_Y, height=280, showlegend=False,
         title=dict(text="NSE sector returns (%)", font_size=11),
         margin=dict(l=4, r=40, t=32, b=4),
         xaxis=dict(ticksuffix="%",
@@ -818,7 +821,7 @@ with col_fii:
     ))
     fig_f.add_hline(y=0, line_color="#e8eaed", line_width=1)
     fig_f.update_layout(
-        **CHART, height=280,
+        **CHART_Y, height=280,
         title=dict(text="Daily net buy/sell (last 10 sessions)",
                    font_size=11),
         barmode="group",
@@ -857,8 +860,8 @@ with col_fx_chart:
             title=dict(
                 text=f"USD/INR  {last_fx:.3f}  {arrow(dchg_fx)} {dchg_fx:+.2f}%",
                 font_size=12, font_color="#202124"),
-            yaxis=dict(tickformat=".2f",
-                       showgrid=True, gridcolor="#f1f3f4"),
+            yaxis=dict(tickformat=".2f", showgrid=True, gridcolor="#f1f3f4"),
+            xaxis=dict(showgrid=True, gridcolor="#f1f3f4", zeroline=False),
         )
         st.plotly_chart(fig_fx, use_container_width=True,
                         config={"displayModeBar": False})
