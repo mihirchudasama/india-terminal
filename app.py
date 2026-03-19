@@ -501,8 +501,11 @@ with col_chart:
             showlegend=False,
         ), row=2, col=1)
 
+        # Build layout manually for subplots — avoids yaxis/yaxis2 conflict
+        chart_layout = {k: v for k, v in CHART.items()
+                        if k not in ("yaxis",)}
         fig.update_layout(
-            **CHART,
+            **chart_layout,
             height=330,
             title=dict(
                 text=(f"Nifty 50  {last_n:,.2f}  "
